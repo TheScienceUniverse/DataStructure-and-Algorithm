@@ -193,8 +193,8 @@ int* quick_sort (int *list, int list_size) {
 		pivot_index = end_index;
 		i = start_index;
 
-		printf ("i = %d, j = %d, %d\n", i, j, stack_last_pos);
-		print_list (stack, stack_size);
+		// printf ("i = %d, j = %d, %d\n", i, j, stack_last_pos);
+		// print_list (stack, stack_size);
 	
 		for (j = start_index; j < end_index; j++) {
 			if (*(list + j) < *(list + pivot_index)) {
@@ -222,8 +222,67 @@ int* quick_sort (int *list, int list_size) {
 }
 
 int* merge_sort (int *list, int list_size) {
-	return list;	
-}
+	int stack_size = 2 * list_size * (int) (log2 (list_size));
+	int *stack = (int*) calloc (stack_size, sizeof (int));
+	int stack_last_pos = -1;
+	int divisible_flag = 0;
+	int i, start_index, end_index, middle_index; // indexes: iterator, start, end, middle
 
+	// indexing
+	if (list_size <= 1) {
+		divisible_flag = -1;		// is divisible? hell no!
+		return list;
+	} else if (list_size == 2) {
+		divisible_flag = 0;			// is divisible? what's the point!
+
+		if (*(list + 0) > *(list + 1)) {
+			swap_by_address (list + 0, list + 1);
+		}
+
+		return list;
+	} else {
+		divisible_flag = 1;		// is divisible? hell yes!
+		
+		start_index = 0;
+		end_index = 1;
+
+		*(stack + ++stack_last_pos) = 0;
+		*(stack + ++stack_last_pos) = list_size - 1;
+	}
+
+	while (divisible_flag == 1) {	// rejected if non divisible
+		for (i = start_index; i < end_index; i += 2) {
+			if (*(stack + i + 1) - *(stack + i) > 1) {
+				middle_index = *(stack + i) + (*(stack + i + 1) - *(stack + i)) / 2;
+
+				*(stack + ++stack_last_pos) = *(stack + i);
+				*(stack + ++stack_last_pos) = middle_index;
+
+				*(stack + ++stack_last_pos) = middle_index + 1;
+				*(stack + ++stack_last_pos) = *(stack + i + 1);
+			}
+		}
+
+		start_index = end_index + 1;
+		end_index = stack_last_pos;
+
+		divisible_flag = 0;
+		for (i = start_index; i <= end_index; i += 2) {
+			if (*(stack + i + 1) - *(stack + i) > 1) {
+				divisible_flag = 1;
+				break;
+			}
+		}
+	}
+	
+	// merging
+	int *temp = (int*) calloc (list_size, sizeof (int));
+
+	while (stack_last_pos != 1) {
+		
+	}
+
+	return list;
+}
 
 #endif

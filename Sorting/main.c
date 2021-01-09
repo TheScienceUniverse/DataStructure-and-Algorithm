@@ -15,10 +15,10 @@ int main (void) {
 
 	print_list (L, n);
 	t1 = clock();
-	S = quick_sort (L, n);
+	S = merge_sort (L, n);
 	t2 = clock();
 	print_list (S, n);
-	// printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
+	printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
 
 	free (L);
 	free (S);
