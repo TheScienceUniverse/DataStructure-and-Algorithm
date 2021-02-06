@@ -13,12 +13,12 @@ int main (void) {
 	L = generate_static_number_list (n);
 	double toughness = get_toughness (L, n);
 
-	print_list (L, n);
+	//print_list ("scrambled", L, n);
 	t1 = clock();
-	S = merge_sort (L, n);
+	S = counting_sort (L, n);
 	t2 = clock();
-	print_list (S, n);
-	printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
+	//print_list ("sorted", S, n);
+	//printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
 
 	free (L);
 	free (S);

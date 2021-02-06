@@ -4,15 +4,7 @@
 #include "helper.h"
 
 /*
-** Selection Sort --> Bingo Sort
-** Bubble Sort
-** Recursive Bubble Sort
-** Insertion Sort
-** Recursive Insertion Sort
-** Merge Sort
-** Iterative Merge Sort
-** Quick Sort
-** Iterative Quick Sort
+
 ** Heap Sort
 ** Counting Sort
 ** Radix Sort
@@ -225,10 +217,10 @@ int* merge_sort (int *list, int list_size) {
 	int stack_size = 2 * list_size * (int) (log2 (list_size));
 	int *stack = (int*) calloc (stack_size, sizeof (int));
 	int stack_last_pos = -1;
-	int divisible_flag = 0;
+	int divisible_flag = 0, tree_level = 0;
 	int i, start_index, end_index, middle_index; // indexes: iterator, start, end, middle
 
-	// indexing
+	// indexing and making sorting tree
 	if (list_size <= 1) {
 		divisible_flag = -1;		// is divisible? hell no!
 		return list;
@@ -251,6 +243,8 @@ int* merge_sort (int *list, int list_size) {
 	}
 
 	while (divisible_flag == 1) {	// rejected if non divisible
+		tree_level += 1;
+
 		for (i = start_index; i < end_index; i += 2) {
 			if (*(stack + i + 1) - *(stack + i) > 1) {
 				middle_index = *(stack + i) + (*(stack + i + 1) - *(stack + i)) / 2;
@@ -259,6 +253,9 @@ int* merge_sort (int *list, int list_size) {
 				*(stack + ++stack_last_pos) = middle_index;
 
 				*(stack + ++stack_last_pos) = middle_index + 1;
+				*(stack + ++stack_last_pos) = *(stack + i + 1);
+			} else {
+				*(stack + ++stack_last_pos) = *(stack + i);
 				*(stack + ++stack_last_pos) = *(stack + i + 1);
 			}
 		}
@@ -274,15 +271,87 @@ int* merge_sort (int *list, int list_size) {
 			}
 		}
 	}
-	
+	// print_list ("stack", stack, stack_last_pos + 1);
+
 	// merging
 	int *temp = (int*) calloc (list_size, sizeof (int));
+	int s1, s2, e1, e2;		// indexes: start and end for temp list 1 and 2
+	int a, b, c;
 
-	while (stack_last_pos != 1) {
-		
+	// sorting leave nodes (undivisible range)
+	// but not decreasing stack_last_pos
+	c = stack_last_pos;
+
+	do {
+		e2 = *(stack + c--);
+		s2 = *(stack + c--);
+
+		if (*(list + s2) > *(list + e2)) {
+			swap_by_address (list + s2, list + e2);
+		}
+	} while (s2 != 0);
+
+	// print_list ("stack", stack, stack_last_pos + 1);
+	//printf ("1st level sorted");
+	//print_list ("array", list, list_size);
+
+	--tree_level;
+
+	while (stack_last_pos > 1) {
+		e2 = *(stack + stack_last_pos--);
+		s2 = *(stack + stack_last_pos--);
+
+		e1 = *(stack + stack_last_pos--);
+		s1 = *(stack + stack_last_pos--);
+
+		a = s1, b = s2, c = 0;
+		// printf ("%d - %d, %d - %d\n", s1, e1, s2, e2);
+		// print_list ("list", list, list_size);
+
+		while (a <= e1 && b <= e2) {
+			if (*(list + a) < *(list + b)) {
+				*(temp + c++) = *(list + a++);
+			} else {
+				*(temp + c++) = *(list + b++);
+			}
+		}
+
+		while (a <= e1) {
+			*(temp + c++) = *(list + a++);
+		}
+
+		while (b <= e2) {
+			*(temp + c++) = *(list + b++);
+		}
+
+		for (i = 0; i < c; i++) {
+			*(list + s1 + i) = *(temp + i);
+		}
 	}
 
 	return list;
+}
+
+int* counting_sort (int *list, int list_size) {
+	int i;
+	int min = *(list + 0), max = *(list + 0);
+
+	for (i = 1; i < list_size; i++) {
+		if (*(list + i) > max)
+			max = *(list + i);
+		if (*(list + i) < min)
+			min = *(list + i);
+	}
+
+	printf ("max = %d, min = %d\n", max, min);
+
+	if (min < 0) {
+		min = -min;
+
+		for (i = 0; i < list_size; i++) {
+			
+		}
+	}
 }
 
 #endif

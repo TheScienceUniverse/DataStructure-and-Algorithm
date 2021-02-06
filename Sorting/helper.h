@@ -20,28 +20,28 @@ int* generate_static_number_list (int list_size) {
 int* generate_random_number_list (int list_size) {
 	int *list = (int*) malloc (list_size * sizeof (int));
 	time_t t;
-	// int b = -1;
+	int b = -1;
 
 	srand ((unsigned) time (&t));
 
 	for (int i = 0; i < list_size; i++) {
-		// b *= -1;
-		*(list + i) = rand(); // * b;
+		b *= -1;
+		*(list + i) = rand() * b;
 	}
 
 	return list;
 }
 
-void print_list (int *list, int list_size) {
+void print_list (char *msg, int *list, int list_size) {
 	int i;
 
-	printf ("List: ");
+	printf ("%s: ", msg);
 
 	for (i = 0; i < list_size; i++) {
 		printf ("%d ", *(list + i));
 	}
 
-	printf ("\n\n");
+	printf ("\n");
 }
 
 void swap_by_address (int *a, int *b) {
