@@ -333,7 +333,7 @@ int* merge_sort (int *list, int list_size) {
 }
 
 int* counting_sort (int *list, int list_size) {
-	int i;
+	int i, j, x;
 	int min = *(list + 0), max = *(list + 0);
 
 	for (i = 1; i < list_size; i++) {
@@ -343,15 +343,39 @@ int* counting_sort (int *list, int list_size) {
 			min = *(list + i);
 	}
 
-	printf ("max = %d, min = %d\n", max, min);
+	x = 0 - min, max = max + x + 1;
 
-	if (min < 0) {
-		min = -min;
+	if (max > 1000) {
+		perror ("ERROR: List too long...max element : 1000\n");
+		return list;
+	}
 
-		for (i = 0; i < list_size; i++) {
-			
+	for (i = 0; i < list_size; i++) {
+		*(list + i) += x;
+	}
+
+	int *temp = (int *) calloc (max, sizeof (int));
+
+	for (i = 0; i < list_size; i++) {
+		++ *(temp + *(list + i));
+	}
+
+	j = 0;
+
+	for (i = 0; i < max; i++) {
+		if (*(temp + i) > 0) {
+			do {
+				-- *(temp + i);
+				*(list + j++) = i;
+			} while (*(temp + i) > 0);
 		}
 	}
+
+	for (i = 0; i < list_size; i++) {
+		*(list + i) -= x;
+	}
+
+	return list;
 }
 
 #endif

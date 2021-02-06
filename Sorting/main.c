@@ -17,7 +17,7 @@ int main (void) {
 	t1 = clock();
 	S = counting_sort (L, n);
 	t2 = clock();
-	//print_list ("sorted", S, n);
+	print_list ("sorted", S, n);
 	//printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
 
 	free (L);
