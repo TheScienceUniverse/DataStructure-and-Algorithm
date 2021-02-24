@@ -9,6 +9,7 @@ int main (void) {
 	printf ("Please enter list size (Max = 10000): ");
 	scanf ("%d", &n);
 
+
 	// L = generate_random_number_list (n);
 	L = generate_static_number_list (n);
 	double toughness = get_toughness (L, n);
