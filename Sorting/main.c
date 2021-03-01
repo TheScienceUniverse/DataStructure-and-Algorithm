@@ -14,15 +14,15 @@ int main (void) {
 	L = generate_static_number_list (n);
 	double toughness = get_toughness (L, n);
 
-	//print_list ("scrambled", L, n);
-	//t1 = clock();
+	print_list ("scrambled", L, n);
+	t1 = clock();
 	S = bucket_sort (L, n);
-	//t2 = clock();
-	//print_list ("sorted", S, n);
-	//printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
+	t2 = clock();
+	print_list ("sorted", S, n);
+	printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
 
-	free (L);
-	free (S);
+	//free (L);
+	//free (S);
 
 	return 0;
 }

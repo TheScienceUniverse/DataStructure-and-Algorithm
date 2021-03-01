@@ -2,6 +2,7 @@
 #define BUCKET_SORT_H
 
 #include "helper.h"
+#include "sort.h"
 
 struct node {
 	int data;
@@ -9,8 +10,13 @@ struct node {
 };
 typedef struct node Node;
 
+int* bucket_sort (int*, int);
+void show_buckets (Node*);
+int count_digits (int);
+int get_bucket_index_to_insert (int, int);
+
 int* bucket_sort (int *list, int list_size) {
-	int i, index;
+	int i;
 
 	// pre-processing list...
 	int min = *list;	// min => minimum element
@@ -21,24 +27,31 @@ int* bucket_sort (int *list, int list_size) {
 		}
 	}
 
+	int max_digits, x = 0;
+
 	for (i = 0; i < list_size; i++) {
 		*(list + i) -= min;
+		x = count_digits (*(list + i));
+		if (x > max_digits) {
+			max_digits = x;
+		}
 	}
 
-	// creating bucket...
-	Node *bucket = (Node *) malloc (10 * sizeof (Node));
+	// creating buckets list...
+	Node *buckets = (Node *) malloc (10 * sizeof (Node));
 
 	for (i = 0; i < 10; i++) {
-		(bucket + i) -> data = i;
-		(bucket + i) -> next = NULL;
+		(buckets + i) -> data = i;
+		(buckets + i) -> next = NULL;
 	}
 
-	// filling bucket...
-	Node *p = NULL;
+	// filling buckets...
+	Node *p;
+	int index;
 
 	for (i = 0; i < list_size; i++) {
-		index = *(list + i) % 10;
-		p = (bucket + i);
+		index = get_bucket_index_to_insert (*(list + i), max_digits);
+		p = (buckets + index);
 
 		// adding new data-node to last of the existing list
 		while (p -> next != NULL) {
@@ -51,33 +64,80 @@ int* bucket_sort (int *list, int list_size) {
 		p -> next = NULL;
 	}
 
-	// printing bucket...
-	printf ("bucket:\n");
+	// printing buckets...
+	show_buckets (buckets);
+
+	// sorting buckets and filling list...
+	int *temp = (int *) calloc (list_size, sizeof (Node));
+	int temp_size, j;
+
+	index = 0;
+
 	for (i = 0; i < 10; i++) {
-		printf ("bucket[%d] at %u : ", i);
-		p = (bucket + i);
-		printf ("%d %u", p -> data, p -> next);
-/*
+		p = (buckets + i) -> next;
+		temp_size = 0;
+
 		while (p != NULL) {
-			printf ("%d ", p -> data);
+			*(temp + temp_size++) = p -> data;
 			p = p -> next;
 		}
-*/
-		printf ("\n");
+
+		temp = merge_sort (temp, temp_size);
+		
+		for (j = 0; j < temp_size; j++) {
+			*(list + index++) = *(temp + j);
+		}
 	}
-	
-
-	// sorting bucket...
-
-	// filling list...
 
 	// post-processing list...
+	for (i = 0; i < list_size; i++) {
+		*(list + i) += min;
+	}
 
 	// freeing bucket...
-	free (bucket);
+	free (buckets);
 
 	return list;
 }
 
+void show_buckets (Node *buckets) {
+	int i;
+	Node *p;
+
+	for (i = 0; i < 10; i++) {
+		p = (buckets + i) -> next;
+		printf ("bucket-%d: ", i);
+
+		while (p != NULL) {
+			printf ("%d ", p -> data);
+			p = p -> next;
+		}
+
+		printf ("\n");
+	}
+}
+
+int count_digits (int number) {
+	int count = 0;
+
+	if (number == 0) {
+		count = 1;
+	}
+
+	while (number != 0) {
+		++count;
+		number /= 10;
+	}
+
+	return count;
+}
+
+int get_bucket_index_to_insert (int number, int max_digits) {
+	while (max_digits-- > 1) {
+		number /= 10; 
+	}
+
+	return (number % 10);
+}
 
 #endif
