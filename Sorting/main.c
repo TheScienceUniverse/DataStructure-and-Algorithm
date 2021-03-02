@@ -1,5 +1,5 @@
 #include "helper.h"
-#include "radix_sort.h"
+#include "comb_sort.h"
 
 int main (void) {
 	int n;
@@ -16,7 +16,7 @@ int main (void) {
 
 	print_list ("scrambled list", L, n);
 	t1 = clock();
-	L = radix_sort (L, n);
+	L = comb_sort (L, n);
 	t2 = clock();
 	print_list ("sorted list", L, n);
 	printf ("Approximate time taken %lf seconds for %lf %% toughness\n", (double) (t2 - t1) / CLOCKS_PER_SEC, toughness);
