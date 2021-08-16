@@ -4,7 +4,7 @@
 #include "helper.h"
 
 int* merge_sort (int *list, int list_size) {
-	int stack_size = 2 * list_size * (int) (log2 (list_size));
+	int stack_size = 2 * pow (2, list_size + 1) - 1;
 	int *stack = (int*) calloc (stack_size, sizeof (int));
 	int stack_last_pos = -1;
 	int divisible_flag = 0, tree_level = 0;
@@ -36,16 +36,13 @@ int* merge_sort (int *list, int list_size) {
 		tree_level += 1;
 
 		for (i = start_index; i < end_index; i += 2) {
-			if (*(stack + i + 1) - *(stack + i) > 1) {
+			if (*(stack + i + 1) - *(stack + i) > 0) {
 				middle_index = *(stack + i) + (*(stack + i + 1) - *(stack + i)) / 2;
 
 				*(stack + ++stack_last_pos) = *(stack + i);
 				*(stack + ++stack_last_pos) = middle_index;
 
 				*(stack + ++stack_last_pos) = middle_index + 1;
-				*(stack + ++stack_last_pos) = *(stack + i + 1);
-			} else {
-				*(stack + ++stack_last_pos) = *(stack + i);
 				*(stack + ++stack_last_pos) = *(stack + i + 1);
 			}
 		}
@@ -55,7 +52,7 @@ int* merge_sort (int *list, int list_size) {
 
 		divisible_flag = 0;
 		for (i = start_index; i <= end_index; i += 2) {
-			if (*(stack + i + 1) - *(stack + i) > 1) {
+			if (*(stack + i + 1) - *(stack + i) > 0) {
 				divisible_flag = 1;
 				break;
 			}
@@ -72,17 +69,7 @@ int* merge_sort (int *list, int list_size) {
 	// but not decreasing stack_last_pos
 	c = stack_last_pos;
 
-	do {
-		e2 = *(stack + c--);
-		s2 = *(stack + c--);
-
-		if (*(list + s2) > *(list + e2)) {
-			swap_by_address (list + s2, list + e2);
-		}
-	} while (s2 != 0);
-
 	// print_list ("stack", stack, stack_last_pos + 1);
-	//printf ("1st level sorted");
 	//print_list ("array", list, list_size);
 
 	--tree_level;
